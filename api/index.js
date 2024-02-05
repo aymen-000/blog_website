@@ -1,6 +1,7 @@
 const express=require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const {User} = require('./Models/UserModel')
 dotenv.config()
 url = process.env.URL
 const app = express()
