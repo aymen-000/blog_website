@@ -1,6 +1,7 @@
 const express=require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
+const {router } = require('./routes/user.route')
 const {User} = require('./Models/UserModel')
 dotenv.config()
 url = process.env.URL
@@ -13,3 +14,4 @@ mongoose.connect(url).then((result)=>{
 app.listen(3000 , ()=>{
     console.log('server is runing on port 3000')
 })
+app.use('/api/user' , router)
