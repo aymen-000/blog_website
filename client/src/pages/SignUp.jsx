@@ -34,7 +34,7 @@ function SignUp() {
     });
   }
   return (
-    <div className='flex justify-center mx-auto'>
+    <div className='flex justify-center mx-auto '>
       <div className='flex items-center justify-center space-x-5 my-20 mx-10 max-sm:flex-col max-sm:space-y-4'>
         <div className='w-2/3 max-sm:w-full max-sm:mx-auto'>
           <div className='self-center whitespace-nowrap text-3xl  tracking-wide font-semibold dark:text-white'>
