@@ -30,7 +30,7 @@ const signIn = async (req , res , next)=>{
         }
         const comparePasssword = bcrypt.compareSync(password , user.password)
         if (!comparePasssword) {
-            return next(errorHandler(400 , "invalidPassowrd"))
+            return next(errorHandler(400 , "invalid Passowrd"))
         }
         const token = jwt.sign({id: user._id , username: user.username } , process.env.JWT_SECRET)
         const userWihthoutPassword = {
@@ -40,6 +40,7 @@ const signIn = async (req , res , next)=>{
         }
         res.status(200).cookie('token', token , {httpOnly:true}).json(userWihthoutPassword)
     }catch(err) {
+        console.log(err.message)
         next(err)
     }
 }

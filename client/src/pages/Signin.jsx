@@ -1,30 +1,29 @@
 import { Card, TextInput, Label, Button, Alert, Spinner } from 'flowbite-react'
 import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-
+import {  useDispatch, useSelector } from 'react-redux';
+import { signInFailure , signInStart, signInSucess } from '../redux/user/userSlice';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 function Signin() {
+  const dispatch = useDispatch()
+  const {loading , error } = useSelector(state => state.user)
   const [password , setPassword] = useState('')
   const [email, setEmail] = useState('')
-  const [err , setErr] = useState(null)
-  const [loading , setLoading] = useState(false)
   const navigate = useNavigate()
   const signUp = (e)=>{
     e.preventDefault()
-    setLoading(true)
+    dispatch(signInStart)
     if (!password || !email) {
-      setLoading(false)
-      return setErr('please fill all the information ')
+      return dispatch(signInFailure('please fill all the information '))
     }
     axios.post('http://localhost:3000/api/signin', { password, email })
     .then((result) => {
-      setLoading(false)
+      dispatch(signInSucess(result.data))
     })
     .catch((err) => {
-      setLoading(false)
-      console.log(err.message);
+      dispatch(signInFailure("verify your password or email adresss"))
     });
   }
   return (
@@ -56,7 +55,7 @@ function Signin() {
           </form>
           <div className='text-gray-400 text-sm'>dont have an account ?<Link to={'/signup'} className='text-blue-500'> Sign Up</Link></div>
           {
-          err && <Alert className='my-3' color="failure">{err}</Alert>
+          error && <Alert className='my-3' color="failure">{error}</Alert>
         }
         </Card>
       </div>
