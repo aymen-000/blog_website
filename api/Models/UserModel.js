@@ -1,9 +1,11 @@
+const { Timestamp } = require('mongodb')
 const mongoose = require('mongoose')
 
-const Schema =new  mongoose.Schema({
-    username : {type :String , required: true } , 
-    email :{type :String , required: true },
-    password :{type :String , required: true },
-}, {timestamps:true})
-const user = mongoose.model('user' , Schema)
-module.exports = {user}
+const shcema =new mongoose.Schema({
+    username : { type: String } , 
+    email : String , 
+    password :String ,
+} , {Timestamp:true})
+
+const users = mongoose.model('users' , shcema)
+module.exports = {users}

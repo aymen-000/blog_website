@@ -1,5 +1,6 @@
 import { Card, TextInput, Label, Button, Alert, Spinner } from 'flowbite-react'
 import { FaGoogle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
@@ -12,6 +13,7 @@ function SignUp() {
   const [email, setEmail] = useState('')
   const [err , setErr] = useState(null)
   const [loading , setLoading] = useState(false)
+  const navigate = useNavigate()
   const signUp = (e)=>{
     e.preventDefault()
     setLoading(true)
@@ -22,7 +24,9 @@ function SignUp() {
     axios.post('http://localhost:3000/signup', { username, password, email })
     .then((result) => {
       setLoading(false)
-      console.log('done');
+      if (result.data == 'signup sucess'){
+        navigate('/signIn')
+      }
     })
     .catch((err) => {
       setLoading(false)
