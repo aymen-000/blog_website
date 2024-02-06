@@ -1,5 +1,6 @@
 const express = require('express')
-const {signup} = require('../controllers/Auth.controllers')
+const {signup, signIn} = require('../controllers/Auth.controllers')
 const Authrouter = express.Router()
-Authrouter.post('/' , signup)
+Authrouter.post('/signup' , signup)
+Authrouter.post('/signin' , signIn)
 module.exports ={Authrouter}

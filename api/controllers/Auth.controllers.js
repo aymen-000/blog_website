@@ -1,7 +1,9 @@
 const {users} = require('../Models/UserModel')
 const bcrypt = require('bcryptjs');
 const { errorHandler } = require('../utils/error');
-
+const cookies = require('cookies')
+const cookie_parser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 const signup =async (req , res , next)=>{
     const {username , email , password} = req.body ; 
     if (!username || !email || !password || username =='' || password=='' || email=="") {
@@ -16,4 +18,29 @@ const signup =async (req , res , next)=>{
         next(err)
     }
 }
-module.exports = {signup}
+const signIn = async (req , res , next)=>{
+    const {email , password} = req.body 
+    if (!password|| !email || email=="" || password==""){
+        return next(errorHandler(400 , 'All fields are required'))
+    }
+    try {
+        const user = await users.findOne({email})
+        if (!user){
+            return next(errorHandler(400 ,'Invalid username or password')) ; 
+        }
+        const comparePasssword = bcrypt.compareSync(password , user.password)
+        if (!comparePasssword) {
+            return next(errorHandler(400 , "invalidPassowrd"))
+        }
+        const token = jwt.sign({id: user._id , username: user.username } , process.env.JWT_SECRET)
+        const userWihthoutPassword = {
+            id : user._id , 
+            username : user.username , 
+            email : user.email
+        }
+        res.status(200).cookie('token', token , {httpOnly:true}).json(userWihthoutPassword)
+    }catch(err) {
+        next(err)
+    }
+}
+module.exports = {signup , signIn}

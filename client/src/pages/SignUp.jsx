@@ -21,7 +21,7 @@ function SignUp() {
       setLoading(false)
       return setErr('please fill all the information ')
     }
-    axios.post('http://localhost:3000/signup', { username, password, email })
+    axios.post('http://localhost:3000/api/signup', { username, password, email })
     .then((result) => {
       setLoading(false)
       if (result.data == 'signup sucess'){
@@ -64,7 +64,6 @@ function SignUp() {
               <TextInput type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
             </div>
             <Button type="submit" disabled={loading} gradientDuoTone="purpleToBlue" onClick={(e)=>{signUp(e)}}>{loading ? <><Spinner size="sm"/> <span>Loading...</span></> : "Sign Up"}</Button>
-            <Button type="submit" disabled={loading} color='gray' ><FaGoogle className='mx-3'/>  continue with Google</Button>
           </form>
           <div className='text-gray-400 text-sm'>Have an account ?<Link to={'/signIn'} className='text-blue-500'> Sign In</Link></div>
           {

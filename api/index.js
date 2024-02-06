@@ -23,8 +23,8 @@ mongoose.connect(url).then((result)=>{
 app.listen(3000 , ()=>{
     console.log('server is runing on port 3000')
 })
-app.use('/api/user' , router)
-app.use('/signup' , Authrouter)
+app.use('/api' , router)
+app.use('/api' , Authrouter)
 
 app.use((err , req , res , next) => {
     const statusCode = err.statusCode || 500;
