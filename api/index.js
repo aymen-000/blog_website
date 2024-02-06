@@ -20,3 +20,13 @@ app.listen(3000 , ()=>{
 })
 app.use('/api/user' , router)
 app.use('/' , Authrouter)
+
+app.use((err , req , res , next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "internal server error" ; 
+    res.status(statusCode).json({
+        sucess : false  , 
+        statusCode , 
+        message
+    })
+})
