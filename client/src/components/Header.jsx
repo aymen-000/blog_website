@@ -24,7 +24,7 @@ function Header() {
             <Button className='w-12 h-10 sm:inline hidden ' color='gray' pill>
                 <FaMoon/>
             </Button>
-            <Button color="gray"  gradientDuoTone='purpleToBlue' outline><Link to={'/signin'} >Sign in</Link></Button>
+            <Button color="gray"  gradientDuoTone='purpleToBlue' outline><Link to={'/signup'} >Sign in</Link></Button>
             <Navbar.Toggle/>
             
         </div>

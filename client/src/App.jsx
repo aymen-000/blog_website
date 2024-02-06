@@ -6,6 +6,8 @@ import Projects from './pages/Projects'
 import Signin from './pages/Signin'
 import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
+import axios from 'axios'
+
 function App() {
   return (
     <Routes>
