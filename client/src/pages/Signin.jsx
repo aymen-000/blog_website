@@ -1,11 +1,12 @@
 import { Card, TextInput, Label, Button, Alert, Spinner } from 'flowbite-react'
-import { FaGoogle } from "react-icons/fa";
+
 import { useNavigate } from 'react-router-dom';
 import {  useDispatch, useSelector } from 'react-redux';
 import { signInFailure , signInStart, signInSucess } from '../redux/user/userSlice';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import OAuth from '../components/OAuth';
 function Signin() {
   const dispatch = useDispatch()
   const {loading , error } = useSelector(state => state.user)
@@ -51,7 +52,7 @@ function Signin() {
               <TextInput type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
             </div>
             <Button type="submit" disabled={loading} gradientDuoTone="purpleToBlue" onClick={(e)=>{signUp(e)}}>{loading ? <><Spinner size="sm"/> <span>Loading...</span></> : "Sign Up"}</Button>
-            <Button type="submit" disabled={loading} color='gray' onClick={(e)=>{signUp(e)}}><FaGoogle className='mx-2'/> Continue with Google</Button>
+            <OAuth/>
           </form>
           <div className='text-gray-400 text-sm'>dont have an account ?<Link to={'/signup'} className='text-blue-500'> Sign Up</Link></div>
           {

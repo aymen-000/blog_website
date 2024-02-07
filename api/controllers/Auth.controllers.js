@@ -4,6 +4,7 @@ const { errorHandler } = require('../utils/error');
 const cookies = require('cookies')
 const cookie_parser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
+const generator = require('generate-password');
 const signup =async (req , res , next)=>{
     const {username , email , password} = req.body ; 
     if (!username || !email || !password || username =='' || password=='' || email=="") {
@@ -44,4 +45,34 @@ const signIn = async (req , res , next)=>{
         next(err)
     }
 }
-module.exports = {signup , signIn}
+const googleSignIn =async (req , res , next)=>{
+    const {username , email , photoUrl} = req.body 
+    const user =await users.findOne({email})
+    try {
+        if (user) {
+            const token = jwt.sign({id : user._id , username : user.username} , process.env.JWT_SECRET )
+            const userWihthoutPassword = {
+                id : user._id , 
+                username : user.username , 
+                email : user.email , 
+                photURL : photoUrl
+            }
+            res.status(200).cookie('token' , token).json({userWihthoutPassword})
+        }else {
+            const generatePassword = generator.generate({length:15 , numbers:true })
+            const hashedPassword = bcrypt.hashSync(generatePassword , 10)
+            const newUser = new users({email , password:hashedPassword , username , photoURL : photoUrl})
+            const token = jwt.sign({id : newUser._id , username : newUser.username} , process.env.JWT_SECRET )
+            const userWihthoutPassword = {
+                id : newUser._id , 
+                username : newUser.username , 
+                email : newUser.email , 
+                photoURL : newUser.photoURL
+            }
+            res.status(200).cookie('token' , token).json({userWihthoutPassword})
+        }
+    }catch(err) {
+        next(err)
+    }
+}
+module.exports = {signup , signIn , googleSignIn}
