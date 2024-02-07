@@ -7,9 +7,12 @@ import { IoIosMenu } from "react-icons/io"
 import { useState } from 'react';
 import { useDispatch , useSelector } from 'react-redux';
 import { Avatar } from 'flowbite-react';
+import { toggleTheme } from '../redux/theme/themeSlice';
+
 function Header() {
     const path =useLocation().pathname
     const {currentUser} = useSelector((state)=>state.user)
+    const dispatch = useDispatch()
   return (
     <>
     <Navbar className='border-b-2'>
@@ -24,7 +27,7 @@ function Header() {
             <AiOutlineSearch/>
         </Button>
         <div className='flex space-x-2'>
-            <Button className='w-12 h-10 sm:inline hidden ' color='gray' pill>
+            <Button className='w-12 h-10 sm:inline hidden ' color='gray' pill onClick={()=>dispatch(toggleTheme())}>
                 <FaMoon/>
             </Button>
             { currentUser != null
@@ -36,7 +39,7 @@ function Header() {
                     </Dropdown.Header>
                     <Link to={'/dashboard?tab=profile'}><Dropdown.Item>Profile</Dropdown.Item></Link>
                     <Dropdown.Divider />
-                    
+
                     <Dropdown.Item>Sign out</Dropdown.Item>
                 </Dropdown>
             </div>

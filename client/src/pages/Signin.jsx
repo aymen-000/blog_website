@@ -33,7 +33,7 @@ function Signin() {
         <div className='w-2/3 max-sm:w-full max-sm:mx-auto'>
           <div className='self-center whitespace-nowrap text-3xl  tracking-wide font-semibold dark:text-white'>
             <span className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Blog</span>Blog</div>
-          <div className='text-gray-800 my-2'>
+          <div className='text-gray-800 my-2 dark:text-white'>
             you can sign up with your username and password or your google account
           </div>
         </div>
