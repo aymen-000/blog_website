@@ -11,7 +11,7 @@ import axios from 'axios'
 function App() {
   return (
     <Routes>
-      <Route element={<Home/>} path='/'/>
+      <Route element={<Home/>} path='/:id'/>
       <Route element={<About/>} path='/About'/>
       <Route element={<Projects/>} path='/Projects'/>
       <Route element={<Dashboard/>} path='/dashboard'/>

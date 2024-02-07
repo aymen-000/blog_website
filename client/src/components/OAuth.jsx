@@ -24,9 +24,8 @@ function OAuth() {
             console.log(username , email , photoUrl)
             axios.post('http://localhost:3000/api/google' , {username , email , photoUrl}).then(
                 (result)=>{
-                    console.log(result.data)
                     dispatch(signInSucess(result.data))
-                    navigate('/')
+                    navigate('/'+result.data?.userWihthoutPassword?.id)
                 }
             ).catch((err)=>{dispatch(signInFailure('somthing happend'))})
         }catch(err) {
