@@ -9,7 +9,7 @@ function SideBar() {
     useEffect(()=>{
         const search = new URLSearchParams(location.search)
         setTab(search.get('tab'))
-    } , location.search)
+    } , [location.search])
     return (
         <div className='max-sm:w-full'>
             <Sidebar aria-label="Default sidebar example" className='max-sm:w-full' >

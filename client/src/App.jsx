@@ -11,7 +11,7 @@ import PrivateRoute from './components/PrivateRoute'
 function App() {
   return (
     <Routes>
-      <Route element={<Home/>} path='/:id'/>
+      <Route element={<Home/>} path='/'/>
       <Route element={<About/>} path='/About'/>
       <Route element={<Projects/>} path='/Projects'/>
       <Route element={<PrivateRoute/>}>

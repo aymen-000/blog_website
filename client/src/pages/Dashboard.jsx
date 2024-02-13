@@ -14,7 +14,7 @@ function Dashboard() {
   useEffect(()=>{
     const urlSearchParms = new URLSearchParams(location.search)
     setTab(urlSearchParms.get('tab'))
-  }, location.search)
+  }, [location.search])
   return (
     <div className='flex mx-0 px-0 max-sm:flex-col max-sm:space-y-3 '>
       <SideBar/>
