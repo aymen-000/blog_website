@@ -1,4 +1,4 @@
-import { TextInput, Label, Button } from 'flowbite-react'
+import { TextInput, Label, Button, Alert } from 'flowbite-react'
 import { set } from 'mongoose'
 import React, { useEffect, useState } from 'react'
 import { FaUser } from "react-icons/fa"
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { useLocation, useParams } from 'react-router-dom'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebaseConfig/firebase'
+import axios, { Axios } from "axios"
 function DashboardProfile() {
     const { currentUser } = useSelector((state) => state.user)
     const [newUserName, setNewUserName] = useState(currentUser.userWihthoutPassword.username)
@@ -23,8 +24,7 @@ function DashboardProfile() {
         setTempImageUrl(URL.createObjectURL(file))
         upadateImage()
     }
-    const upadateImage = () => {
-        console.log(imageFile)
+    const upadateImage =  () => {
         const storage = getStorage(app)
         const filename = new Date().getTime() + imageFile?.name
         const storageRef = ref(storage, filename)
@@ -35,13 +35,15 @@ function DashboardProfile() {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                 setDataProgress(progress.toFixed(0))
             },
-            (err) => {
+            (error) => {
                 setImageFileUplaodERR('Could not upload image check it is size')
             },
             () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setTempImageUrl(downloadURL)
-                })
+                if (imageFileUploadERR ==null){
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        setTempImageUrl(downloadURL)
+                    })
+                }
             }
         )
     }
@@ -50,8 +52,17 @@ function DashboardProfile() {
             upadateImage()
         }
     }, [imageFile])
-    console.log('data :::: ')
-    console.log(imageFileUploadERR, dataProgress, tempImageUrl)
+    const updateInformation =(e)=>{
+        e.preventDefault()
+        const id = currentUser?.userWihthoutPassword?.id
+        axios.post('http://localhost:3000/updateInformation' , {password , newUserName , email ,tempImageUrl , id}).then((result)=>{
+            console.log('done')
+            console.log(result.data)
+        }).catch((err)=>{
+            console.log("error")
+            console.log(err.message)
+        })
+    }
     return (
         <div className=' w-5/6 flex justify-center justify-items-center mt-20 mb-20 max-sm:w-full mx-auto px-5' >
             <div className='flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3  '>
@@ -62,6 +73,8 @@ function DashboardProfile() {
                         <img src={tempImageUrl || currentUser.userWihthoutPassword.photoURL} className='w-16 h-16 rounded-full  border-4 border-gray-500 ' />
                     </label>
                 </div>
+                {console.log('err:' , imageFileUploadERR)}
+                {imageFileUploadERR &&<div className='my-2'> <Alert  color="failure">{imageFileUploadERR}</Alert></div>}
                 <form className='space-y-2 my-2 max-sm:mb-20' onSubmit={(e) => { updateInformation(e) }}>
                     <div>
                         <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@domain.com" required />
