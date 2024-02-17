@@ -21,6 +21,8 @@ function Signin() {
     }
     axios.post('http://localhost:3000/api/signin', { password, email })
     .then((result) => {
+      console.log("result: ")
+      console.log(result.data)
       dispatch(signInSucess(result.data))
     })
     .catch((err) => {

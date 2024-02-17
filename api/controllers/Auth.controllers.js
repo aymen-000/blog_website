@@ -55,13 +55,14 @@ const googleSignIn =async (req , res , next)=>{
                 id : user._id , 
                 username : user.username , 
                 email : user.email , 
-                photURL : photoUrl
+                photoURL : user.photoURL
             }
             res.status(200).cookie('token' , token).json({userWihthoutPassword})
         }else {
             const generatePassword = generator.generate({length:15 , numbers:true })
             const hashedPassword = bcrypt.hashSync(generatePassword , 10)
             const newUser = new users({email , password:hashedPassword , username , photoURL : photoUrl})
+            await newUser.save()
             const token = jwt.sign({id : newUser._id , username : newUser.username} , process.env.JWT_SECRET )
             const userWihthoutPassword = {
                 id : newUser._id , 
