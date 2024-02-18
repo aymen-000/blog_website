@@ -76,4 +76,11 @@ const googleSignIn =async (req , res , next)=>{
         next(err)
     }
 }
-module.exports = {signup , signIn , googleSignIn}
+const signOut = (req , res , next) =>{
+    try {
+        res.clearCookie('token').json('done')
+    }catch(error) {
+        next(error)
+    }
+}
+module.exports = {signup , signIn , googleSignIn , signOut}

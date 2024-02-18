@@ -1,15 +1,16 @@
 import { TextInput, Label, Button, Alert } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useParams } from 'react-router-dom'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebaseConfig/firebase'
 import axios from "axios"
-import { signInSucess, updateInformations } from '../redux/user/userSlice'
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import { signInSucess, updateInformations , signOut } from '../redux/user/userSlice'
+import Delete from "./Delete"
 import Cookies from 'cookies'
+import { toggleAlert } from '../redux/alert/alertSlice'
 function DashboardProfile() {
     const dispatch = useDispatch()
+    const {show} = useSelector((state)=>state.alert)
     const { currentUser } = useSelector((state) => state.user)
     const [newUserName, setNewUserName] = useState(currentUser?.userWihthoutPassword?.username)
     const [email, setEmail] = useState(currentUser?.userWihthoutPassword?.email)
@@ -18,6 +19,7 @@ function DashboardProfile() {
     const [dataProgress, setDataProgress] = useState(0)
     const [imageFileUploadERR, setImageFileUplaodERR] = useState(null)
     const [password, setPassword] = useState('')
+    const [showAlert , setShowAlert] = useState(false)
     const uploadFile = (e) => {
         e.preventDefault()
         const file = e.target.files[0]
@@ -79,22 +81,25 @@ function DashboardProfile() {
     }
     const deleteAcount = (e) => {
         e.preventDefault()
-        console.log('deleted')
+        e.stopPropagation()
+        dispatch(toggleAlert(true))
     }
     const signOut = (e) => {
         e.preventDefault()
-        axios.get('http://localhost:3000/api/logout').then((result)=>{
+        axios.get('http://localhost:3000/api/signout').then((result)=>{
+            console.log("done")
             console.log(result.data)
+            dispatch(signInSucess(null))
         }).catch((err)=>{
             console.log('err')
             console.log(err.message)
         })
     }
     return (
-        <div className=' w-5/6 flex justify-center justify-items-center mt-20 mb-20 max-sm:w-full mx-auto px-5' >
-            <div className='flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3  '>
+        <div className=' w-5/6 flex justify-center justify-items-center  max-sm:w-full mx-auto px-5 z-50  '  onClick={(e)=>{dispatch(toggleAlert(false)) }}>
+            <div className={showAlert ? 'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3 z-50 ' :'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3 z-50 mb-20 mt-20  ' } >
                 <h1 className='font-bold font-xl items-center text-center my-2'>Profile</h1>
-                <div className='relative flex justify-center'>
+                <div className='relative flex justify-center '>
                     <label>
                         <input type='file' className='hidden' onChange={(e) => { uploadFile(e) }} />
                         <img src={tempImageUrl || currentUser?.userWihthoutPassword?.photoURL} className='w-16 h-16 rounded-full  border-4 border-gray-500 ' />
@@ -102,7 +107,7 @@ function DashboardProfile() {
                 </div>
                 {console.log('err:', imageFileUploadERR)}
                 {imageFileUploadERR && <div className='my-2'> <Alert color="failure">{imageFileUploadERR}</Alert></div>}
-                <form className='space-y-2 my-2 max-sm:mb-20' onSubmit={(e) => { updateInformation(e) }}>
+                <form className='space-y-2 my-2 max-sm:mb-20 z-50' onSubmit={(e) => { updateInformation(e) }}>
                     <div>
                         <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@domain.com" required />
                     </div>
@@ -115,10 +120,11 @@ function DashboardProfile() {
                     <Button type='submit' color='gray' outline className='w-full'>Update</Button>
                     <div className='flex justify-between mt-2'>
                         <div className='text-red-700  cursor-pointer hover:text-red-600' onClick={(e) => { deleteAcount(e) }} >Delete Account</div>
-                        <div className='text-red-700 cursor-pointer hover:text-red-600' onClick={(e) => { signOut(e) }}>Sign out</div>
+                        <div className='text-red-700 cursor-pointer hover:text-red-600' onClick={(e) => { signOut(e)  }}>Sign out</div>
                     </div>
                 </form>
             </div>
+            {show && <div className='w-full fixed top-56 mb-20 z-50 ' onClick={(e)=>{e.stopPropagation()}}><Delete /></div>}
         </div>
     )
 }
