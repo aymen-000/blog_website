@@ -24,6 +24,7 @@ function Signin() {
       console.log("result: ")
       console.log(result.data)
       dispatch(signInSucess(result.data))
+      navigate('/home')
     })
     .catch((err) => {
       dispatch(signInFailure("verify your password or email adresss"))

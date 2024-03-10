@@ -33,13 +33,16 @@ const signIn = async (req , res , next)=>{
         if (!comparePasssword) {
             return next(errorHandler(400 , "invalid Passowrd"))
         }
-        const token = jwt.sign({id: user._id , username: user.username } , process.env.JWT_SECRET)
+        const token = jwt.sign({id: user._id , username: user.username , isAdmin : user.isAdmin } , process.env.JWT_SECRET)
         const userWihthoutPassword = {
             id : user._id , 
             username : user.username , 
-            email : user.email
+            email : user.email,
+            photoURL : user.photoURL , 
+            isAdmin : user.isAdmin 
         }
-        res.status(200).cookie('token', token , {httpOnly:true}).json(userWihthoutPassword)
+        
+        res.status(200).cookie('token', token , {httpOnly:true}).json({userWihthoutPassword})
     }catch(err) {
         console.log(err.message)
         next(err)
@@ -55,7 +58,8 @@ const googleSignIn =async (req , res , next)=>{
                 id : user._id , 
                 username : user.username , 
                 email : user.email , 
-                photoURL : user.photoURL
+                photoURL : user.photoURL , 
+                isAdmin : user.isAdmin
             }
             res.status(200).cookie('token' , token).json({userWihthoutPassword})
         }else {
@@ -63,12 +67,13 @@ const googleSignIn =async (req , res , next)=>{
             const hashedPassword = bcrypt.hashSync(generatePassword , 10)
             const newUser = new users({email , password:hashedPassword , username , photoURL : photoUrl})
             await newUser.save()
-            const token = jwt.sign({id : newUser._id , username : newUser.username} , process.env.JWT_SECRET )
+            const token = jwt.sign({id : newUser._id , username : newUser.username,  isAdmin : newUser.isAdmin} , process.env.JWT_SECRET )
             const userWihthoutPassword = {
                 id : newUser._id , 
                 username : newUser.username , 
                 email : newUser.email , 
-                photoURL : newUser.photoURL
+                photoURL : newUser.photoURL, 
+                isAdmin : newUser.isAdmin
             }
             res.status(200).cookie('token' , token).json({userWihthoutPassword})
         }

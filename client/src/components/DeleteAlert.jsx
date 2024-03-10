@@ -11,10 +11,13 @@ function DeleteAlert() {
     const {show} = useSelector((state)=>state.alert)
     const {currentUser} = useSelector((state)=>state.user)
     const DeleteAcount = (e)=>{
+        console.log("start")
         e.preventDefault()
-        axios.post('http://localhost:3000/delete' , {id : currentUser?.userWihthoutPassword?.id}).then((result)=>{
+        axios.post('http://localhost:3000/api/delete' , {id : currentUser?.userWihthoutPassword?.id}).then((result)=>{
             console.log('deleted')
+            console.log(result.data)
             dispatch(signInSucess(null))
+            dispatch(toggleAlert(false))
         }).catch((err)=>{
             console.log('error')
             console.log(err.message)

@@ -96,8 +96,8 @@ function DashboardProfile() {
         })
     }
     return (
-        <div className=' w-5/6 flex justify-center justify-items-center  max-sm:w-full mx-auto px-5 z-50  '  onClick={(e)=>{dispatch(toggleAlert(false)) }}>
-            <div className={showAlert ? 'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3 z-50 ' :'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3 z-50 mb-20 mt-20  ' } >
+        <div className=' w-5/6 flex justify-center justify-items-center  max-sm:w-full mx-auto px-5   '  onClick={(e)=>{dispatch(toggleAlert(false)) }}>
+            <div className={showAlert ? 'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3  ' :'flex-col justify-center w-1/3 max-sm:w-full max-lg:w-2/3  mb-20 mt-20  ' } >
                 <h1 className='font-bold font-xl items-center text-center my-2'>Profile</h1>
                 <div className='relative flex justify-center '>
                     <label>
@@ -107,7 +107,7 @@ function DashboardProfile() {
                 </div>
                 {console.log('err:', imageFileUploadERR)}
                 {imageFileUploadERR && <div className='my-2'> <Alert color="failure">{imageFileUploadERR}</Alert></div>}
-                <form className='space-y-2 my-2 max-sm:mb-20 z-50' onSubmit={(e) => { updateInformation(e) }}>
+                <form className='space-y-2 my-2 max-sm:mb-20 ' onSubmit={(e) => { updateInformation(e) }}>
                     <div>
                         <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@domain.com" required />
                     </div>
@@ -124,9 +124,8 @@ function DashboardProfile() {
                     </div>
                 </form>
             </div>
-            {show && <div className='w-full fixed top-56 mb-20 z-50 ' onClick={(e)=>{e.stopPropagation()}}><Delete /></div>}
+            {show && <div className='w-full fixed top-56 mb-20  ' onClick={(e)=>{e.stopPropagation()}}><Delete /></div>}
         </div>
     )
 }
-
 export default DashboardProfile

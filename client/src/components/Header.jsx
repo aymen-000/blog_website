@@ -7,12 +7,24 @@ import { IoIosMenu } from "react-icons/io"
 import { useState } from 'react';
 import { useDispatch , useSelector } from 'react-redux';
 import { Avatar } from 'flowbite-react';
+import axios from 'axios';
 import { toggleTheme } from '../redux/theme/themeSlice';
-
+import { signInSucess } from '../redux/user/userSlice';
 function Header() {
     const path =useLocation().pathname
     const {currentUser} = useSelector((state)=>state.user)
     const dispatch = useDispatch()
+    const signOut = (e) => {
+        e.preventDefault()
+        axios.get('http://localhost:3000/api/signout').then((result)=>{
+            console.log("done")
+            console.log(result.data)
+            dispatch(signInSucess(null))
+        }).catch((err)=>{
+            console.log('err')
+            console.log(err.message)
+        })
+    }
   return (
     <>
     <Navbar className='border-b-2'>
@@ -31,7 +43,8 @@ function Header() {
                 <FaMoon/>
             </Button>
             { currentUser != null
-            ? <div className='flex md:order-2'>
+            ? <div className='flex md:order-2  '>
+                
                 <Dropdown  arrowIcon={false} inline label={<Avatar alt="User settings" img={currentUser?.userWihthoutPassword?.photoURL} rounded />}>
                     <Dropdown.Header>
                         <span className="block text-sm">{currentUser?.userWihthoutPassword?.username}</span>
@@ -40,7 +53,7 @@ function Header() {
                     <Link to={'/dashboard?tab=profile'}><Dropdown.Item>Profile</Dropdown.Item></Link>
                     <Dropdown.Divider />
 
-                    <Dropdown.Item>Sign out</Dropdown.Item>
+                    <Dropdown.Item ><div onClick={(e)=>{signOut(e)}}> Sign out</div></Dropdown.Item>
                 </Dropdown>
             </div>
             : <Button color="gray"  gradientDuoTone='purpleToBlue' outline><Link to={'/signin'} >Sign in</Link></Button>}
