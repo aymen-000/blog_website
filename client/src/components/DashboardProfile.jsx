@@ -8,6 +8,7 @@ import { signInSucess, updateInformations , signOut } from '../redux/user/userSl
 import Delete from "./Delete"
 import Cookies from 'cookies'
 import { toggleAlert } from '../redux/alert/alertSlice'
+import { Link } from 'react-router-dom'
 function DashboardProfile() {
     const dispatch = useDispatch()
     const {show} = useSelector((state)=>state.alert)
@@ -118,6 +119,14 @@ function DashboardProfile() {
                         <TextInput type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" required />
                     </div>
                     <Button type='submit' color='gray' outline className='w-full'>Update</Button>
+                    {
+                        currentUser?.userWihthoutPassword?.isAdmin && (
+                            <Link to={'/add-post'}> 
+                            <Button gradientDuoTone="purpleToPink" className='w-full my-2'>Create a post</Button>
+                            </Link>
+                            
+                        )
+                    }
                     <div className='flex justify-between mt-2'>
                         <div className='text-red-700  cursor-pointer hover:text-red-600' onClick={(e) => { deleteAcount(e) }} >Delete Account</div>
                         <div className='text-red-700 cursor-pointer hover:text-red-600' onClick={(e) => { signOut(e)  }}>Sign out</div>

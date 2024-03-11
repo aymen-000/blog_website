@@ -7,7 +7,7 @@ import { FaGithub } from "react-icons/fa";
 
 function Footer() {
   return (
-    <div className='flex-col items-center  border-t-8 border-teal-500 w-full mb-2 py-4 px-5'>
+    <div className='flex-col items-center  border-t-8 border-teal-500 w-full mb-2 py-4 px-5 my-4'>
         
         <div className='self-center whitespace-nowrap text-4xl  tracking-wide font-semibold dark:text-white'>
         <span className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Blog</span>Blog</div>

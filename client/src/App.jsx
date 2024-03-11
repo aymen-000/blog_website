@@ -8,6 +8,8 @@ import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import axios from 'axios'
 import PrivateRoute from './components/PrivateRoute'
+import PostPrivateRoute from './components/PostPrivateRoute'
+import AddPost from './pages/AddPost'
 function App() {
   return (
     <Routes>
@@ -16,6 +18,9 @@ function App() {
       <Route element={<Projects/>} path='/Projects'/>
       <Route element={<PrivateRoute/>}>
         <Route element={<Dashboard/>} path='/dashboard'/>
+      </Route>
+      <Route element={<PostPrivateRoute/>} >
+        <Route element={<AddPost/>} path='/add-post'/>
       </Route>
       <Route element={<SignUp/>} path='/signup'/>
       <Route element={<Signin/>} path='/signIn'/>
