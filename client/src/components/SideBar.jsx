@@ -33,6 +33,9 @@ function SideBar() {
                         <Sidebar.Item active = { tab == 'profile'} icon={HiUser} href='/dashboard?tab=profile'>
                             <div>Profile</div>
                         </Sidebar.Item>
+                        <Sidebar.Item active = { tab == 'posts'} icon={HiUser} href='/dashboard?tab=posts'>
+                            <div>Posts</div>
+                        </Sidebar.Item>
                         <Sidebar.Item icon={FaSignOutAlt} href='/'>
                             <div onClick={(e)=>{signOut(e)}}>Signout</div>
                         </Sidebar.Item>

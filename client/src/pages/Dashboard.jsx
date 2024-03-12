@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import {useLocation, useParams} from 'react-router-dom'
 import DashboardProfile from '../components/DashboardProfile'
 import SideBar from '../components/Sidebar'
+import Posts from './Posts'
 function Dashboard() {
   const location = useLocation()
   const [tab , setTab] = useState('')
@@ -19,7 +20,7 @@ function Dashboard() {
     <div className='flex mx-0 px-0 max-sm:flex-col max-sm:space-y-3 '>
       <SideBar/>
       {
-        tab =='profile' ? <DashboardProfile/> : <div></div>
+        tab =='profile' ? <DashboardProfile/> : tab =='posts' ? <Posts/> : <div></div>
       }
     </div>
   )

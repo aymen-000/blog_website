@@ -42,9 +42,9 @@ const signIn = async (req , res , next)=>{
             isAdmin : user.isAdmin 
         }
         
-        res.status(200).cookie('token', token , {httpOnly:true}).json({userWihthoutPassword})
+        res.status(200).cookie('token', token , { httpOnly: true, secure: true, sameSite: 'none' }).json({userWihthoutPassword})
     }catch(err) {
-        console.log(err.message)
+        
         next(err)
     }
 }
@@ -53,7 +53,8 @@ const googleSignIn =async (req , res , next)=>{
     const user =await users.findOne({email})
     try {
         if (user) {
-            const token = jwt.sign({id : user._id , username : user.username} , process.env.JWT_SECRET )
+            const token = jwt.sign({id : user._id , username : user.username} , process.env.JWT_SECRET  )
+            console.log(token)
             const userWihthoutPassword = {
                 id : user._id , 
                 username : user.username , 
@@ -61,7 +62,7 @@ const googleSignIn =async (req , res , next)=>{
                 photoURL : user.photoURL , 
                 isAdmin : user.isAdmin
             }
-            res.status(200).cookie('token' , token).json({userWihthoutPassword})
+            res.status(200).cookie('token' , token, { httpOnly: true, secure: true, sameSite: 'none' }).json({userWihthoutPassword})
         }else {
             const generatePassword = generator.generate({length:15 , numbers:true })
             const hashedPassword = bcrypt.hashSync(generatePassword , 10)
@@ -75,7 +76,7 @@ const googleSignIn =async (req , res , next)=>{
                 photoURL : newUser.photoURL, 
                 isAdmin : newUser.isAdmin
             }
-            res.status(200).cookie('token' , token).json({userWihthoutPassword})
+            res.status(200).cookie('token' , token, { httpOnly: true, secure: true, sameSite: 'none' }).json({userWihthoutPassword})
         }
     }catch(err) {
         next(err)
@@ -83,7 +84,7 @@ const googleSignIn =async (req , res , next)=>{
 }
 const signOut = (req , res , next) =>{
     try {
-        res.clearCookie('token').json('done')
+        res.json('done')
     }catch(error) {
         next(error)
     }
