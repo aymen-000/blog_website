@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema({
     }, 
     image : {
         type : String , 
-        default : "http://localhost:3000/Models/uploads/blog.jpg"
+        default : "https://firebasestorage.googleapis.com/v0/b/mern-7f320.appspot.com/o/blog.jpg?alt=media&token=42553d51-dffb-453c-9f35-a215e1ee345a"
     } , 
     category : {
         type:String ,

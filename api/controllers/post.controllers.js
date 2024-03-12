@@ -16,4 +16,12 @@ const createPost = async (req , res , next) => {
         }
     }
 }
-module.exports = {createPost}
+const getPosts =async (req , res , next) => {
+    try {
+        const posts = await post.find()
+        res.status(201).json(posts)
+    }catch(err) {
+        next(err)
+    }
+}
+module.exports = {createPost , getPosts}
