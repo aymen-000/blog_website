@@ -50,7 +50,7 @@ function AddPost() {
             category , 
             title , 
             content , 
-            imgUrl  , 
+            image :imgUrl  , 
             userId : currentUser?.userWihthoutPassword?.id
         }
         axios.post('http://localhost:3000/api/create' , data).then((result)=>{
