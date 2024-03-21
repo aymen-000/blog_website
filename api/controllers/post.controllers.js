@@ -60,7 +60,19 @@ const deletePost =async (req , res , next) =>{
     }catch(err) {
         next(err)
     }
-
-
 }
-module.exports = {createPost , getPosts , deletePost}
+const getOnePost = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        console.log(id);
+        const findPost = await post.findById(id);
+        if (findPost) {
+            res.status(200).json(findPost);
+        } else {
+            next(errorHandler(404, "The post doesn't exist"));
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+module.exports = {createPost , getPosts , deletePost, getOnePost}
