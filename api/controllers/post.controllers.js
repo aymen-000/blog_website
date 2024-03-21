@@ -48,4 +48,19 @@ const getPosts =async (req , res , next) => {
         next(err)
     }
 }
-module.exports = {createPost , getPosts}
+const deletePost =async (req , res , next) =>{
+    try {
+        const {id} = req.body 
+        if (id) {
+            await post.findOneAndDelete({_id:id})
+            res.status(201).json('ok')
+        }else {
+            next(errorHandler('401' , 'no id '))
+        }
+    }catch(err) {
+        next(err)
+    }
+
+
+}
+module.exports = {createPost , getPosts , deletePost}

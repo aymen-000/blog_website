@@ -23,6 +23,7 @@ function App() {
       <Route element={<PostPrivateRoute/>} >
         <Route element={<AddPost/>} path='/add-post'/>
         <Route element= {<SinglePost/>} path='/dashboard/posts/:id'/>
+        <Route element={<UpdatePost/>} path='/dashboard/posts/update/'/>
       </Route>
       <Route element={<SignUp/>} path='/signup'/>
       <Route element={<Signin/>} path='/signIn'/>
