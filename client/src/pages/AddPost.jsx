@@ -67,7 +67,7 @@ function AddPost() {
             </div>
             <form onSubmit={(e) => { postBlog(e) }}>
                 <div className='p-2 my-2'>
-                    <Select id='categories' onChange={(e) => setCategory(e.target.value)} required>
+                    <Select id='categories' value={category}  onChange={(e) => setCategory(e.target.value)} required>
                         <option>Science</option>
                         <option>Travel</option>
                         <option>Cooking</option>

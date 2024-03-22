@@ -5,8 +5,10 @@ import { Alert, Button, FileInput, Label, Select, Spinner, TextInput } from 'flo
 import ReactQuill from 'react-quill';
 import { useParams } from 'react-router-dom'
 import { app } from '../firebaseConfig/firebase';
+import { useNavigate } from 'react-router-dom';
 function UpdatePost() {
     const { id } = useParams()
+    const navigate = useNavigate()
     const [imgPreUrl, setImgPreUrl] = useState(null)
     const [file, setFile] = useState(null)
     const [title, setTitle] = useState("")
@@ -38,7 +40,8 @@ function UpdatePost() {
         }
         axios.post('http://localhost:3000/api/updatePost/'+id , data).then(
             (result)=>{
-                console.log(result.data)
+                setErr(null)
+                navigate('/dashboard?tab=posts')
             }
         ).catch((err)=>{
             setErr('something happened')

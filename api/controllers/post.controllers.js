@@ -102,7 +102,6 @@ const updatePost = async (req, res, next) => {
         await foundPost.save();
 
         // Respond with success status
-        console.log(foundPost)
         res.status(200).json({ message: 'Post updated successfully', post: foundPost });
     } catch (err) {
         next(err);

@@ -5,6 +5,8 @@ import { FaSignOutAlt } from 'react-icons/fa'
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInSucess } from '../redux/user/userSlice';
+import { PiUsersThree } from "react-icons/pi";
+
 import axios from 'axios';
 function SideBar() {
     const location = useLocation()
@@ -35,6 +37,9 @@ function SideBar() {
                         </Sidebar.Item>
                         <Sidebar.Item active = { tab == 'posts'} icon={HiUser} href='/dashboard?tab=posts'>
                             <div>Posts</div>
+                        </Sidebar.Item>
+                        <Sidebar.Item icon={PiUsersThree} href='/dashboard?tab=users'>
+                            <div >Users</div>
                         </Sidebar.Item>
                         <Sidebar.Item icon={FaSignOutAlt} href='/'>
                             <div onClick={(e)=>{signOut(e)}}>Signout</div>

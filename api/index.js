@@ -7,6 +7,7 @@ const {Authrouter} = require('./routes/AuthRout')
 const {Postrouter} = require('./routes/post.route')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const { usersRouter } = require('./routes/users.route')
 
 
 dotenv.config()
@@ -27,6 +28,7 @@ app.listen(3000 , ()=>{
 app.use('/api' , router)
 app.use('/api' , Authrouter)
 app.use('/api' , Postrouter)
+app.use('/api' , usersRouter)
 app.use((err , req , res , next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "internal server error" ; 
