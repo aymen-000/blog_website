@@ -64,7 +64,6 @@ const deletePost =async (req , res , next) =>{
 const getOnePost = async (req, res, next) => {
     try {
         const { id } = req.params;
-        console.log(id);
         const findPost = await post.findById(id);
         if (findPost) {
             res.status(200).json(findPost);
@@ -75,4 +74,38 @@ const getOnePost = async (req, res, next) => {
         next(err);
     }
 }
-module.exports = {createPost , getPosts , deletePost, getOnePost}
+const updatePost = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { title, image, content, category } = req.body;
+
+        // Check if the ID is provided
+        if (!id) {
+            return next(errorHandler(404, "Post ID is required"));
+        }
+
+        // Find the post by ID
+        const foundPost = await post.findById(id);
+
+        // Check if the post exists
+        if (!foundPost) {
+            return next(errorHandler(404, "The post doesn't exist"));
+        }
+
+        // Update the post fields
+        foundPost.title = title || foundPost.title;
+        foundPost.image = image || foundPost.image;
+        foundPost.content = content || foundPost.content;
+        foundPost.category = category || foundPost.category;
+
+        // Save the updated post
+        await foundPost.save();
+
+        // Respond with success status
+        console.log(foundPost)
+        res.status(200).json({ message: 'Post updated successfully', post: foundPost });
+    } catch (err) {
+        next(err);
+    }
+};
+module.exports = {createPost , getPosts , deletePost, getOnePost , updatePost}
