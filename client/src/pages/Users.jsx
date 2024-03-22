@@ -1,52 +1,162 @@
 import axios from 'axios';
-import { Alert, Table, TableBody, TableHead } from 'flowbite-react';
+import { Alert, Spinner, Table, TableBody, TableHead } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
-
+import { Button } from 'flowbite-react';
+import MySpinner from '../components/MySpinner'
+import Search from '../components/Search';
+import { Modal } from 'flowbite-react'
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 function Users() {
     const [users, setUsers] = useState([]);
     const [err, setErr] = useState(null);
-
+    const [showMore, setShowMore] = useState(false)
+    const [load, setLoad] = useState(false)
+    const [load2, setLoad2] = useState(false)
+    const [search, setSearch] = useState('')
+    const [showModal, setShowModal] = useState(false)
+    const navigate = useNavigate()
     useEffect(() => {
+        setLoad(true)
         axios.get('http://localhost:3000/api/getUsers')
             .then((result) => {
                 setUsers(result.data);
+                setLoad(false)
+                if (result.data.length >= 2) {
+                    setShowMore(true)
+                } else {
+                    setShowMore(false)
+                }
                 setErr(null);
             })
             .catch((err) => {
                 console.error(err);
+                setLoad(false)
                 setErr("Oops something happened !!");
             });
     }, []);
+    const showMorePosts = (e) => {
+        e.preventDefault();
+        setLoad2(true)
+        const startIndex = users.length; // Assuming users is your current state containing user data
 
+        axios.get('http://localhost:3000/api/getUsers?startIndex=' + startIndex)
+            .then((result) => {
+                if (result.data.length > 0) { // Check if there are new posts
+                    setUsers((prev) => [...prev, ...result.data]); // Concatenate new posts with previous posts
+                    if (result.data.length === 2) { // Check if the number of new posts is exactly 2
+                        setShowMore(true); // If there are exactly 2 new posts, show the "Show More" button
+                    } else {
+                        setShowMore(false); // Otherwise, hide the "Show More" button
+                    }
+                    setErr(null);
+                } else {
+                    setShowMore(false); // If no new posts are returned, hide the "Show More" button
+                }
+                setLoad2(false)
+            }).catch((err) => {
+                console.error(err);
+                setLoad2(false)
+                setErr("Oops something happened !!");
+            });
+    };
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/getUsers?search=' + search)
+            .then((result) => {
+                setUsers(result.data);
+                setLoad(false)
+                if (result.data.length >= 2) {
+                    setShowMore(true)
+                } else {
+                    setShowMore(false)
+                }
+                setErr(null);
+            })
+            .catch((err) => {
+                console.error(err);
+                setLoad(false)
+                setErr("Oops something happened !!");
+            });
+    }, [search])
+    const DeleteUser = (id,e) => {
+        e.preventDefault()
+        axios.delete('http://localhost:3000/api/delete/' + id).then(
+            (result)=>{
+                if(result.data == 'ok'){
+                    navigate('/')
+                }
+            }
+        ).catch((err)=>{
+            setErr(err.message)
+        })
+    }
     return (
+
         <div className='min-h-[100vh] w-full my-2 mx-2'>
             {err ? (
                 <Alert className='my-2 w-2/3 mx-auto' color="failure">{err}</Alert>
-            ) : (
-                <Table className="overflow-x-auto" hoverable>
-                    <TableHead>
-                        <Table.HeadCell>DATE JOIN</Table.HeadCell>
-                        <Table.HeadCell>USER IMAGE</Table.HeadCell>
-                        <Table.HeadCell>USERNAME</Table.HeadCell>
-                        <Table.HeadCell>EMAIL</Table.HeadCell>
-                        <Table.HeadCell>ADMIN</Table.HeadCell>
-                        <Table.HeadCell>DELETE</Table.HeadCell>
-                    </TableHead>
-                    <TableBody>
-                        {/* Iterate over users and render table rows */}
-                        {users.map(user => (
-                            <Table.Row key={user.id}>
-                                <Table.Cell>{user.joinDate}</Table.Cell>
-                                <Table.Cell><img src={user.photoURL} alt={user.username} className='rounded-full  w-12 h-12'/></Table.Cell>
-                                <Table.Cell>{user.username}</Table.Cell>
-                                <Table.Cell>{user.email}</Table.Cell>
-                                <Table.Cell className={user.isAdmin ? 'text-green-600' : 'text-red-500'}>{user.isAdmin ? 'Yes' : 'No'}</Table.Cell>
-                                <Table.Cell>Delete</Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </TableBody>
-                </Table>
+            ) : load ? <MySpinner /> : (
+                <>
+                    <form className="max-w-md mx-auto my-6">
+                        <label for="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} id="default-search" className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search username,email..." required />
+                            <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                        </div>
+                    </form>
+                    <Table className="overflow-x-auto" hoverable>
+                        <TableHead>
+                            <Table.HeadCell>DATE JOIN</Table.HeadCell>
+                            <Table.HeadCell>USER IMAGE</Table.HeadCell>
+                            <Table.HeadCell>USERNAME</Table.HeadCell>
+                            <Table.HeadCell>EMAIL</Table.HeadCell>
+                            <Table.HeadCell>ADMIN</Table.HeadCell>
+                            <Table.HeadCell>DELETE</Table.HeadCell>
+                        </TableHead>
+                        <TableBody>
+                            {/* Iterate over users and render table rows */}
+                            {users.map(user => (
+                                <Table.Row key={user.id}>
+                                    <Table.Cell>{user.joinDate}</Table.Cell>
+                                    <Table.Cell><img src={user.photoURL} alt={user.username} className='rounded-full  w-12 h-12' /></Table.Cell>
+                                    <Table.Cell>{user.username}</Table.Cell>
+                                    <Table.Cell>{user.email}</Table.Cell>
+                                    <Table.Cell className={user.isAdmin ? 'text-green-600' : 'text-red-500'}>{user.isAdmin ? 'Yes' : 'No'}</Table.Cell>
+                                    <Table.Cell className='text-red-500 cursor-pointer' onClick={(e) => { setShowModal(true) }}>Delete</Table.Cell>
+                                    <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup>
+                                        <Modal.Body>
+                                            <div className='text-center'>
+                                                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200">
+
+                                                </HiOutlineExclamationCircle>
+                                                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                                    Are you sure you want to delete this post?
+                                                </h3>
+                                                <div className="flex justify-center gap-4">
+                                                    <Button color="failure" onClick={() => { setShowModal(false); DeleteUser(post._id, e) }}>
+                                                        {"Yes, I'm sure"}
+                                                    </Button>
+                                                    <Button color="gray" onClick={() => setShowModal(false)}>
+                                                        No, cancel
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </Modal.Body>
+                                    </Modal>
+                                </Table.Row>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </>
             )}
+            {!err && showMore && <div className='text-center flex justify-center my-3'>
+                <Button onClick={(e) => { showMorePosts(e) }}>{load2 && <Spinner aria-label="Spinner button example" size="sm" className='mx-2' />}Show more posts </Button>
+            </div>}
         </div>
     );
 }
