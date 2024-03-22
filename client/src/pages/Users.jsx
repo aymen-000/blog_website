@@ -14,15 +14,25 @@ function Users() {
     const [load, setLoad] = useState(false)
     const [load2, setLoad2] = useState(false)
     const [search, setSearch] = useState('')
-    const [showModal, setShowModal] = useState(false)
+    const [clicked, setClicked] = useState(false)
     const navigate = useNavigate()
+    const [showModal, setShowModal] = useState([]);
+
+    // Function to toggle modal for a specific user
+    const toggleModal = (index) => {
+        const newShowModal = [...showModal];
+        newShowModal[index] = !newShowModal[index];
+        setShowModal(newShowModal);
+    };
     useEffect(() => {
         setLoad(true)
         axios.get('http://localhost:3000/api/getUsers')
             .then((result) => {
-                setUsers(result.data);
+                console.log('reeee')
+                const m = [...result.data.usersWithoutPasswords]
+                setUsers(m);
                 setLoad(false)
-                if (result.data.length >= 2) {
+                if (m.length >= 2) {
                     setShowMore(true)
                 } else {
                     setShowMore(false)
@@ -34,17 +44,18 @@ function Users() {
                 setLoad(false)
                 setErr("Oops something happened !!");
             });
-    }, []);
+    }, [clicked]);
     const showMorePosts = (e) => {
         e.preventDefault();
         setLoad2(true)
         const startIndex = users.length; // Assuming users is your current state containing user data
-
+        console.log(startIndex)
         axios.get('http://localhost:3000/api/getUsers?startIndex=' + startIndex)
             .then((result) => {
-                if (result.data.length > 0) { // Check if there are new posts
-                    setUsers((prev) => [...prev, ...result.data]); // Concatenate new posts with previous posts
-                    if (result.data.length === 2) { // Check if the number of new posts is exactly 2
+                const m = [...result.data.usersWithoutPasswords]
+                if (m.length > 0) { // Check if there are new posts
+                    setUsers((prev) => [...prev, ...m]); // Concatenate new posts with previous posts
+                    if (m.length === 2) { // Check if the number of new posts is exactly 2
                         setShowMore(true); // If there are exactly 2 new posts, show the "Show More" button
                     } else {
                         setShowMore(false); // Otherwise, hide the "Show More" button
@@ -63,9 +74,10 @@ function Users() {
     useEffect(() => {
         axios.get('http://localhost:3000/api/getUsers?search=' + search)
             .then((result) => {
-                setUsers(result.data);
+                const m = [...result.data.usersWithoutPasswords]
+                setUsers(m );
                 setLoad(false)
-                if (result.data.length >= 2) {
+                if (m.length >= 2) {
                     setShowMore(true)
                 } else {
                     setShowMore(false)
@@ -78,16 +90,18 @@ function Users() {
                 setErr("Oops something happened !!");
             });
     }, [search])
-    const DeleteUser = (id,e) => {
+    const DeleteUser = (id, e) => {
         e.preventDefault()
-        axios.delete('http://localhost:3000/api/delete/' + id).then(
-            (result)=>{
-                if(result.data == 'ok'){
-                    navigate('/')
-                }
+        axios.delete('http://localhost:3000/api/deleteUser/' + id).then(
+            (result) => {
+                if (result.data == 'ok') {
+                    setErr(null)
+                    navigate('/dashboard?tab=users')
+                    setClicked(true)
+                } 
             }
-        ).catch((err)=>{
-            setErr(err.message)
+        ).catch((err) => {
+            setErr("Ooops something happend")
         })
     }
     return (
@@ -120,37 +134,48 @@ function Users() {
                         </TableHead>
                         <TableBody>
                             {/* Iterate over users and render table rows */}
-                            {users.map(user => (
-                                <Table.Row key={user.id}>
-                                    <Table.Cell>{user.joinDate}</Table.Cell>
-                                    <Table.Cell><img src={user.photoURL} alt={user.username} className='rounded-full  w-12 h-12' /></Table.Cell>
-                                    <Table.Cell>{user.username}</Table.Cell>
-                                    <Table.Cell>{user.email}</Table.Cell>
-                                    <Table.Cell className={user.isAdmin ? 'text-green-600' : 'text-red-500'}>{user.isAdmin ? 'Yes' : 'No'}</Table.Cell>
-                                    <Table.Cell className='text-red-500 cursor-pointer' onClick={(e) => { setShowModal(true) }}>Delete</Table.Cell>
-                                    <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup>
-                                        <Modal.Body>
-                                            <div className='text-center'>
-                                                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200">
-
-                                                </HiOutlineExclamationCircle>
-                                                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                                    Are you sure you want to delete this post?
-                                                </h3>
-                                                <div className="flex justify-center gap-4">
-                                                    <Button color="failure" onClick={() => { setShowModal(false); DeleteUser(post._id, e) }}>
-                                                        {"Yes, I'm sure"}
-                                                    </Button>
-                                                    <Button color="gray" onClick={() => setShowModal(false)}>
-                                                        No, cancel
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </Modal.Body>
-                                    </Modal>
-                                </Table.Row>
-                            ))}
-                        </TableBody>
+                            {console.log(users)}
+                            {
+                                
+                                users?.map((user, index) => (
+                                    <Table.Row key={user.id}>
+                                        <Table.Cell>{user.createdAt.toString().split('T')[0]}</Table.Cell>
+                                        <Table.Cell>
+                                            <img src={user.photoURL} alt={user.username} className='rounded-full  w-12 h-12' />
+                                        </Table.Cell>
+                                        <Table.Cell>{user.username}</Table.Cell>
+                                        <Table.Cell>{user.email}</Table.Cell>
+                                        <Table.Cell className={user.isAdmin ? 'text-green-600' : 'text-red-500'}>
+                                            {user.isAdmin ? 'Yes' : 'No'}
+                                        </Table.Cell>
+                                        <Table.Cell className='text-red-500 cursor-pointer' onClick={() => toggleModal(index)}>
+                                            Delete
+                                        </Table.Cell>
+                                        {/* Modal for each user */}
+                                        {showModal[index] && (
+                                            <Modal key={user.id} show={showModal[index]} size="md" onClose={() => toggleModal(index)} popup>
+                                                <Modal.Body>
+                                                    <div className='text-center'>
+                                                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                                                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                                            Are you sure you want to delete this user?
+                                                        </h3>
+                                                        <div className="flex justify-center gap-4">
+                                                            <Button color="failure" onClick={(e) => { toggleModal(index); DeleteUser(user._id,e) }}>
+                                                                {"Yes, I'm sure"}
+                                                            </Button>
+                                                            <Button color="gray" onClick={() => toggleModal(index)}>
+                                                                No, cancel
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                            </Modal>
+                                        )}
+                                    </Table.Row>
+                                ))
+                            }                       
+                         </TableBody>
                     </Table>
                 </>
             )}

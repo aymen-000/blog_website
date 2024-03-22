@@ -6,10 +6,13 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signInSucess } from '../redux/user/userSlice';
 import { PiUsersThree } from "react-icons/pi";
+import { useSelector } from 'react-redux';
 
-import axios from 'axios';
+import axios from'axios';
 function SideBar() {
     const location = useLocation()
+    const {currentUser} = useSelector((state)=>state.user)
+    const admin =currentUser?.userWihthoutPassword?.isAdmin
     const [tab , setTab] = useState('')
     const dispatch = useDispatch()
     const signOut = (e) => {
@@ -35,12 +38,12 @@ function SideBar() {
                         <Sidebar.Item active = { tab == 'profile'} icon={HiUser} href='/dashboard?tab=profile'>
                             <div>Profile</div>
                         </Sidebar.Item>
-                        <Sidebar.Item active = { tab == 'posts'} icon={HiUser} href='/dashboard?tab=posts'>
+                        {admin && <Sidebar.Item active = { tab == 'posts'} icon={HiUser} href='/dashboard?tab=posts'>
                             <div>Posts</div>
-                        </Sidebar.Item>
-                        <Sidebar.Item icon={PiUsersThree} href='/dashboard?tab=users'>
+                        </Sidebar.Item>}
+                        {admin && <Sidebar.Item icon={PiUsersThree}active = { tab == 'users'} href='/dashboard?tab=users'>
                             <div >Users</div>
-                        </Sidebar.Item>
+                        </Sidebar.Item>}
                         <Sidebar.Item icon={FaSignOutAlt} href='/'>
                             <div onClick={(e)=>{signOut(e)}}>Signout</div>
                         </Sidebar.Item>

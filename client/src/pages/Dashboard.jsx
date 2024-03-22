@@ -12,6 +12,8 @@ import Posts from './Posts'
 import Users from './Users'
 function Dashboard() {
   const location = useLocation()
+  const {currentUser} = useSelector((state)=>state.user)
+  const admin =currentUser?.userWihthoutPassword?.isAdmin
   const [tab , setTab] = useState('')
   useEffect(()=>{
     const urlSearchParms = new URLSearchParams(location.search)
@@ -21,7 +23,7 @@ function Dashboard() {
     <div className='flex mx-0 px-0 max-sm:flex-col max-sm:space-y-3 '>
       <SideBar/>
       {
-        tab =='profile' ? <DashboardProfile/> : tab =='posts' ? <Posts/> : tab == 'users' ? <Users/> : <div></div>
+        tab =='profile' ? <DashboardProfile/> : tab =='posts' && admin ? <Posts/> : tab == 'users'&&admin ? <Users/> : <div></div>
       }
     </div>
   )
