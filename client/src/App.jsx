@@ -12,6 +12,7 @@ import PostPrivateRoute from './components/PostPrivateRoute'
 import AddPost from './pages/AddPost'
 import SinglePost from './pages/SinglePost'
 import UpdatePost from './pages/UpdatePost'
+import PostPgae from './pages/PostPgae'
 function App() {
   return (
     <Routes>
@@ -23,11 +24,11 @@ function App() {
       </Route>
       <Route element={<PostPrivateRoute/>} >
         <Route element={<AddPost/>} path='/add-post'/>
-        <Route element= {<SinglePost/>} path='/dashboard/posts/:id'/>
         <Route element={<UpdatePost/>} path='/dashboard/posts/update/:id'/>
       </Route>
       <Route element={<SignUp/>} path='/signup'/>
       <Route element={<Signin/>} path='/signIn'/>
+      <Route element={<PostPgae/>} path='/posts/:id'/>
     </Routes>
   )
 }

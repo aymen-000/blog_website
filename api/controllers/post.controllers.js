@@ -22,10 +22,11 @@ const getPosts =async (req , res , next) => {
         const startIndex = parseInt(req.query.startIndex) || 0 
         const limit = parseInt(req.query.limit) || 2 
         const sortDirection =  req.query.sort == 'asc' ? 1 : -1
+        
         const posts = await post.find({
             ...(req.query.userid && {userId : req.query.userId}) , 
             ...(req.query.category && {category:req.query.category}) , 
-            ...(req.query.postId && {_id:req.query.postId}) , 
+            ...(req.query.postId && { _id:req.query.postId}) , 
             ...(req.query.searchTerm && {
                 $or: [
                     {title:{ $regex : req.query.searchTerm , $option : "i"}},

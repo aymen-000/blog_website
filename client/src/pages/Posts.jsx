@@ -66,7 +66,7 @@ function Posts() {
                             <Table.Cell>
                                 <img src={post.image} width={80} height={80} />
                             </Table.Cell>
-                            <Table.Cell ><Link to={"/dashboard/posts/" + post._id} className='hover:underline'>{post.title}</Link></Table.Cell>
+                            <Table.Cell ><Link to={"/posts/" + post._id} className='hover:underline'>{post.title}</Link></Table.Cell>
                             <Table.Cell>{post.category}</Table.Cell>
                             <Table.Cell><div className='text-red-600 cursor-pointer hover:underline' onClick={(e) => { setShowModal(true) }}>Delete</div></Table.Cell>
                             <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup>
