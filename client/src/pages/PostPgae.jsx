@@ -5,6 +5,7 @@ import MySpinner from '../components/MySpinner'
 import Commontaire from '../components/Commontaire'
 import { useSelector } from 'react-redux'
 import Commontaires from '../components/Commontaires'
+import RecentArticles from '../components/RecentArticles'
 function PostPgae() {
   const {currentUser} = useSelector((state)=>state.user)
   const { id } = useParams()
@@ -61,6 +62,10 @@ function PostPgae() {
           </div>
           <div>
             <Commontaires postId={id}/>
+          </div>
+          <div>
+            <h2 className='text-lg font-semibold text-black-900 text-center'>Recent articles</h2>
+            <RecentArticles postId={id} />
           </div>
         </div>
       }

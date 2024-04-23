@@ -18,7 +18,7 @@ function Posts() {
         }).catch((err) => {
             setDriver("oops!! something happened")
         })
-    }, [posts])
+    }, [])
     const DeletePost = (e, id) => {
         e.preventDefault()
         axios.post('http://localhost:3000/api/deletePost', { id }).then((result) => {
@@ -38,7 +38,6 @@ function Posts() {
         const startIndex = posts.length
         axios.get('http://localhost:3000/api/getPosts?startIndex=' + startIndex).then((result) => {
             SetPosts((prev) => ([...prev, ...result.data?.posts]))
-            console.log(result.data?.posts.length)
             if (result.data?.posts.length < 2) {
                 setShowMore(false)
             }
