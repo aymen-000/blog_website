@@ -52,18 +52,30 @@ const getUserById = async (req, res, next) => {
 
 };
 const updateCommentsInfo = async (req, res, next) => {
-    const { num, userId, postId } = req.body;
+    const { id, num, userId, postId, fill } = req.body;
+    
     try {
-        
-        const updateComment = await Comment.findOneAndUpdate({postId}, {
-            $set: { numberOfLikes: num },
-            $push: { likes: userId }
-        }, { new: true });
-        console.log(updateComment)
-        res.status(200).json(updateComment);
+        if (!fill) {
+            const updateComment = await Comment.findByIdAndUpdate(
+                id,
+                { $pull: { likes: userId } , $set: { numberOfLikes: num } },
+                { new: true }
+            );
+            res.status(200).json(updateComment);
+        } else {
+            const updateComment = await Comment.findByIdAndUpdate(
+                id,
+                {
+                    $set: { numberOfLikes: num },
+                    $push: { likes: userId }
+                },
+                { new: true }
+            );
+            res.status(200).json(updateComment);
+        }
     } catch (err) {
-        console.error(err.message);
-        next(err)
+        next(err);
     }
 };
-module.exports = {addComment , getComments, getUserById , updateCommentsInfo}
+
+module.exports = {addComment , getComments, getUserById , updateCommentsInfo }

@@ -5,9 +5,9 @@ import { AiFillLike } from "react-icons/ai";
 
 
 
-function OneComment({ numLikes, Likes, comment, userId, postId , time}) {
+function OneComment({id ,  numLikes, Likes, comment, userId, postId , time}) {
     const [photoUrl, setPhotoUrl] = useState(null);
-    const [fill, setFill] = useState(false);
+    const [fill, setFill] = useState(Likes.includes(userId));
     const [likes, setLikes] = useState(numLikes);
     const [userName , setUserName] = useState(null)
     
@@ -29,7 +29,7 @@ function OneComment({ numLikes, Likes, comment, userId, postId , time}) {
     };
 
     useEffect(() => {
-        axios.post('http://localhost:3000/api/updateCommentsInfo', { num : likes, userId, postId })
+        axios.post('http://localhost:3000/api/updateCommentsInfo', {id ,  num : likes, userId, postId , fill})
             .then((result) => {
                 console.log(result);
             })
@@ -37,7 +37,8 @@ function OneComment({ numLikes, Likes, comment, userId, postId , time}) {
                 console.log("err");
                 console.log(err.message);
             });
-    }, [postId, userId , likes]); // Consider if you need to include postId here
+        
+    }, [postId, userId , likes, fill]); // Consider if you need to include postId here
 
     return (
         
@@ -50,10 +51,6 @@ function OneComment({ numLikes, Likes, comment, userId, postId , time}) {
                         <strong>{userName}</strong> <span className="text-xs text-gray-400">{time}</span>
                         <p className="text-sm">{comment}</p>
                         <div className="mt-4 flex items-center">
-                            <div className="flex -space-x-2 mr-2">
-                                <img className="rounded-full w-6 h-6 border border-white" src="https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="" />
-                                <img className="rounded-full w-6 h-6 border border-white" src="https://images.unsplash.com/photo-1513956589380-bad6acb9b9d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" alt="" />
-                            </div>
                             <div className="flex w-full justify-between items-center">
                                 <div className="text-sm text-gray-500 font-semibold">
                                     {likes} likes

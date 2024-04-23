@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import OneComment from './OneComment'
 
 function Commontaires({ postId }) {
+  const [numOfComments , setNumComments] = useState(0)
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState(null)
   const [comments, setComments] = useState([])
@@ -21,7 +22,7 @@ function Commontaires({ postId }) {
       .then((result) => {
         setComments(result.data?.allComments);
         setLoading(false);
-        console.log(result.data?.allComments);
+        setNumComments(result.data.numOfComments)
       })
       .catch((err) => {
         setLoading(false);
@@ -46,12 +47,17 @@ function Commontaires({ postId }) {
       setErr(err.message)
     })
   }
-  console.log(comments)
+
   return (
     <div class="antialiased  mx-auto w-2/3 space-y-3 text-justify">
-      <h3 class="mb-4 text-lg font-semibold text-black-900 text-center">Comments</h3>
+      <div className='flex space-x-2 items-center'>
+      <h3 class="text-lg font-semibold text-black-900 ">Comments</h3>
+      <div className='border border-gray-400 rounded px-2 w-fit  '>{numOfComments}</div>
+      </div>
+      
       {comments.map((comment)=>{
-        return <OneComment userId={comment.userId} numLikes={comment.numberOfLikes} Likes={comment.likes} comment={comment.content} postId={postId} time={getTime(comment.updatedAt)}/>
+        {console.log(comment.numberOfLikes)}
+        return <OneComment id={comment._id} userId={comment.userId} numLikes={comment.numberOfLikes} Likes={comment.likes} comment={comment.content} postId={postId} time={getTime(comment.updatedAt)}/>
       })}
       {show && <div onClick={(e)=>showMore(e)} className='text-gray-500 text-center hover:underline cursor-pointer'> show more </div>}
     </div>
