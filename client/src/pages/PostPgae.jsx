@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import MySpinner from '../components/MySpinner'
 import Commontaire from '../components/Commontaire'
 import { useSelector } from 'react-redux'
+import Commontaires from '../components/Commontaires'
 function PostPgae() {
   const {currentUser} = useSelector((state)=>state.user)
   const { id } = useParams()
@@ -55,7 +56,11 @@ function PostPgae() {
            <div className='mx-2'><img src={currentUser?.userWihthoutPassword?.photoURL} className='rounded-full w-6 h-6'/> </div><div className='text-blue-300'>{currentUser?.userWihthoutPassword?.email}</div></div>
           <div className='flex justify-center'>
             
-            <Commontaire/>
+            <Commontaire postId={id}/>
+
+          </div>
+          <div>
+            <Commontaires postId={id}/>
           </div>
         </div>
       }

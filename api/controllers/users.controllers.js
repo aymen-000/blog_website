@@ -7,6 +7,7 @@ const getUsers = async (req, res, next) => {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 2;
         const search = req.query.search || null;
+        
 
         // Construct the query dynamically based on provided parameters
         const query = {};
@@ -14,7 +15,7 @@ const getUsers = async (req, res, next) => {
         if (search) {
             query.$or = [
                 { username: { $regex: search, $options: "i" } },
-                { email: { $regex: search, $options: "i" } }
+                { email: { $regex: search, $options: "i" } } 
             ];
         }
 

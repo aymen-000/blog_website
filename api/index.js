@@ -5,6 +5,7 @@ const {router } = require('./routes/user.route')
 const {User} = require('./Models/UserModel')
 const {Authrouter} = require('./routes/AuthRout')
 const {Postrouter} = require('./routes/post.route')
+const {CommentRouter} = require('./routes/comment.route')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const { usersRouter } = require('./routes/users.route')
@@ -29,6 +30,7 @@ app.use('/api' , router)
 app.use('/api' , Authrouter)
 app.use('/api' , Postrouter)
 app.use('/api' , usersRouter)
+app.use('/api' , CommentRouter)
 app.use((err , req , res , next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "internal server error" ; 
